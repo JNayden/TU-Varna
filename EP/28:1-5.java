@@ -1,4 +1,3 @@
-```java
 import bg.tu_varna.kst_sit.ci_ep.exceptions.LexicalException;
 import bg.tu_varna.kst_sit.ci_ep.lexer.Lexer;
 import bg.tu_varna.kst_sit.ci_ep.lexer.token.Token;
