@@ -4,7 +4,6 @@
 #include <fstream>
 #include <string>
 
-
 //Link with ws2_32.lib
 #pragma commnet (lib, "ws2_32.lib")
 #pragma warning( disable : 4996)
@@ -18,10 +17,10 @@ int main(int argc, char* argv[])
 	std::string buff;
 	std::string url;
 	std::string hostname;
-	
+
 
 	unsigned short  wVersionRequested;
-	
+
 	int err, res, i, sock;
 
 	char* ip = new char();
@@ -35,7 +34,9 @@ int main(int argc, char* argv[])
 
 
 	url = argv[1];
+	
 	hostname = url.substr(url.find("www."), url.find("/", 8) - url.find("www."));
+	std::string get_http = "GET / HTTP/1.1\r\nHost: " + hostname + "\r\nConnection: close\r\n\r\n";
 
 	/*--------------WINSOCKET INITIALIZATION-------------*/
 
@@ -92,23 +93,23 @@ int main(int argc, char* argv[])
 	server.sin_port = htons(80);
 
 	//Connect to remote server
-	if (connect(sock, (sockaddr*)&server, sizeof(server)) == SOCKET_ERROR)
+	if (connect(sock, (sockaddr*)(& server), sizeof(server)) == SOCKET_ERROR)
 	{
 		printf("Connect error.\n");
 		return 1;
 	}
-
 	puts("Connected");
 
-	
-	/*----------GET REQUEST-----------*/
-	const char* getRequest = "GET / HTTP/1.1\n\n";
 
-	if (send(sock, getRequest, strlen(getRequest), 0) < 0) 
+	/*----------GET REQUEST-----------*/
+
+
+	if (send(sock, get_http.c_str(), strlen(get_http.c_str()), 0) < 0)
 	{
 		printf("Error with sending socket%d", WSAGetLastError());
 		return 0;
 	}
+
 
 	/*----------GET RESPONSE------------/
 	/-----------FILE WRITING-----------*/
@@ -126,8 +127,8 @@ int main(int argc, char* argv[])
 		else
 			printf("recv failed.\n");
 	} while (res > 0);
-
-
+	
+	
 	//printf("%d\n", recvbuflen);
 	MyFile.close();
 	
@@ -141,6 +142,7 @@ int main(int argc, char* argv[])
 	
 	myfile.close();
 	std::cout << "\n-----------------------------\n";
+	
 	/*-------------Why i need that---------------*/
 	res = shutdown(sock, SD_SEND);
 	if (res == SOCKET_ERROR)
@@ -151,8 +153,14 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	/*----------------------------------------------*/
+	
 	closesocket(sock);
 	WSACleanup();
 
+	// pause
+	std::cout << "\n\nPress ANY key to close.\n\n";
+	std::cin.ignore(); std::cin.get();
+	
+	//https://stackoverflow.com/questions/1011339/how-do-you-make-a-http-request-with-c
 	return 0;
 }
