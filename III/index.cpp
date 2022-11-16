@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <thread>
 #include <vector>
 #include <set>
 
@@ -34,10 +35,14 @@ std::vector<std::string> readFiles(std::string filename, std::vector<std::string
 				word = "";
 			}
 		}
+		if (buff.at(buff.size() - 1) > 33) // in case of one word on row wtihout space
+			collectionPostingLists.push_back(word);
+		word = "";
 	}
 	file1.close();
 	return collectionPostingLists;
 }
+
 Node* getNewNode(std::string data)
 {
 	Node* bst = new Node();
@@ -69,7 +74,7 @@ void traverseDocument(std::string data, std::vector<std::string> vec1)
 	{
 		if (vec1[i] == data)
 		{
-			std::cout << i << ", ";
+			std::cout << i + 1 << ", ";
 		}
 	}
 	std::cout << std::endl;
