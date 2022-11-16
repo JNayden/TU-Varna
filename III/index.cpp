@@ -35,7 +35,7 @@ std::vector<std::string> readFiles(std::string filename, std::vector<std::string
 				word = "";
 			}
 		}
-		if (buff.at(buff.size() - 1) > 33) // in case of one word on row wtihout space
+		if (buff.size() > 0 && buff.at(buff.size() - 1) > 33) // in case of one word on row wtihout space
 			collectionPostingLists.push_back(word);
 		word = "";
 	}
